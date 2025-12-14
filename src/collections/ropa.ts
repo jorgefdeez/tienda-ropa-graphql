@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb"
 import { getDB } from "../db/mongo"
 import { RopaCOLLECTION, userCOLLECTION } from "../utils"
+import { User } from "../types"
 
 
 export const getRopita = async (page?: number, size?: number) => {
@@ -46,4 +47,27 @@ export const buyRopa = async (idRopa: string, userId: string) => {
     })
 
     return updateUser
+}
+
+export const deleteRopa=async(idRopa:string,userId:string)=>{
+    const db=getDB()
+
+    const iduser=new ObjectId(userId)
+    const ropaDeletar=await getRopitaID(idRopa)
+    if(!ropaDeletar){
+         throw new Error("No encuentro esa prenda macho")
+    }
+
+    await db.collection<User>(userCOLLECTION).updateOne(
+        {_id:iduser},
+        {$pull:{clothes:idRopa}}
+    )
+
+      const updateUser = await db.collection(userCOLLECTION).findOne({
+        _id: new ObjectId(userId)
+    })
+
+    return updateUser
+
+
 }

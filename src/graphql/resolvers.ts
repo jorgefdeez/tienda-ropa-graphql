@@ -1,26 +1,26 @@
 import { IResolvers } from "@graphql-tools/utils";
 import { createUser, validateUser } from "../collections/users";
 import { signToken } from "../auth";
-import { buyRopa, createRopita, getRopita, getRopitaID } from "../collections/ropa";
+import { buyRopa, createRopita, deleteRopa, getRopita, getRopitaID } from "../collections/ropa";
 import { getDB } from "../db/mongo";
 import { ObjectId } from "mongodb";
 import { RopaCOLLECTION } from "../utils";
+import { Clothing, User } from "../types";
 
 
 export const resolvers: IResolvers = {
 
     User:{
-        clothes:async(parent)=>{
+        clothes:async(parent:User)=>{
             const db=getDB()
             const ids=parent.clothes as Array<string>||[]
 
             const idMongo= ids.map(x=>new ObjectId(x))
 
-            return await db.collection(RopaCOLLECTION).find({
+            return await db.collection<Clothing>(RopaCOLLECTION).find({
                 _id:{$in:idMongo}
 
             }).toArray()
-
 
         }
     },
@@ -47,7 +47,15 @@ export const resolvers: IResolvers = {
             if (!user) {
                 throw new Error("logeate")
             }
-            return await buyRopa(clothingId,user._id)
+            return await buyRopa(clothingId,user._id.toString())
+        },
+        deleteClothing:async(_,{id},{user})=>{
+            if(!user){
+                throw new Error("logeate")
+            }
+
+            return deleteRopa(id,user._id.toString())
+
 
         }
 

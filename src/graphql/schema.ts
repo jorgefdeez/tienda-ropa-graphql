@@ -28,6 +28,7 @@ export const typeDefs = gql`
         addClothing(name: String!, size: String!, color: String!, price: Float!): Clothing!
         buyClothing(clothingId: ID!): User!
         register(email: String!, password: String!): String!
-        login(email: String!, password: String!): String!
+        login(email: String!, password: String!): String!,
+        deleteClothing(id:ID!):User!
     }
 `
