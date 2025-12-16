@@ -1,11 +1,11 @@
 import { ObjectId } from "mongodb"
-import { getDB } from "../db/mongo"
+import { getDb } from "../db/mongo"
 import { RopaCOLLECTION, userCOLLECTION } from "../utils"
 import { User } from "../types"
 
 
 export const getRopita = async (page?: number, size?: number) => {
-    const db = getDB()
+    const db = getDb()
     //const localPage=page ?page :1
     page = page || 1
     size = size || 10
@@ -14,12 +14,12 @@ export const getRopita = async (page?: number, size?: number) => {
 }
 
 export const getRopitaID = async (id: string) => {
-    const db = getDB()
+    const db = getDb()
     return await db.collection(RopaCOLLECTION).findOne({ _id: new ObjectId(id) })
 }
 
 export const createRopita = async (name: string, size: string, color: string, price: number) => {
-    const db = getDB()
+    const db = getDb()
     const result = await db.collection(RopaCOLLECTION).insertOne({
         name,
         size,
@@ -31,7 +31,7 @@ export const createRopita = async (name: string, size: string, color: string, pr
 }
 
 export const buyRopa = async (idRopa: string, userId: string) => {
-    const db = getDB()
+    const db = getDb()
     const ropaAñadir = await getRopitaID(idRopa)
     if (!ropaAñadir) {
         throw new Error("Ropa no encontrada")
@@ -50,7 +50,7 @@ export const buyRopa = async (idRopa: string, userId: string) => {
 }
 
 export const deleteRopa=async(idRopa:string,userId:string)=>{
-    const db=getDB()
+    const db=getDb()
 
     const iduser=new ObjectId(userId)
     const ropaDeletar=await getRopitaID(idRopa)

@@ -2,7 +2,7 @@ import { IResolvers } from "@graphql-tools/utils";
 import { createUser, validateUser } from "../collections/users";
 import { signToken } from "../auth";
 import { buyRopa, createRopita, deleteRopa, getRopita, getRopitaID } from "../collections/ropa";
-import { getDB } from "../db/mongo";
+import { getDb } from "../db/mongo";
 import { ObjectId } from "mongodb";
 import { RopaCOLLECTION } from "../utils";
 import { Clothing, User } from "../types";
@@ -12,7 +12,7 @@ export const resolvers: IResolvers = {
 
     User:{
         clothes:async(parent:User)=>{
-            const db=getDB()
+            const db=getDb()
             const ids=parent.clothes as Array<string>||[]
 
             const idMongo= ids.map(x=>new ObjectId(x))
@@ -55,7 +55,6 @@ export const resolvers: IResolvers = {
             }
 
             return deleteRopa(id,user._id.toString())
-
 
         }
 

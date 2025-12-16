@@ -1,27 +1,26 @@
-import { Db, MongoClient } from "mongodb";
-import dotenv from "dotenv";
-import { dbName } from "../utils";
+import {Db, MongoClient} from "mongodb"
+import dotenv from "dotenv"
 
-dotenv.config();
+dotenv.config()
 
-let client: MongoClient;
-let dB: Db;
+let client : MongoClient
+let miBaseDeDatos : Db
 
-export const connectToMongoDB = async () => {
+export const  connectToMongoDb = async() : Promise<void> =>{
     try{
-        const mongoUrl = process.env.MONGO_URL;
-        if(mongoUrl){
-            client = new MongoClient(mongoUrl);
-            await client.connect();
-            dB = client.db(dbName);
-            console.log("Estás conectado al mondongo cosa guapa!");
-        } else {
-            throw new Error("MONGO_URL is not defined in environment variables");
-        }
-    }
-    catch(err){
-        console.log("Error del mondongo baby: ", err)
-    }
-};
+        const urlMongo = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.CLUSTER}.zolqtad.mongodb.net/?appName=${process.env.CLUSTER_NAME}`;
 
-export const getDB = ():Db => dB;
+        console.log(urlMongo)
+        client = new MongoClient(urlMongo)
+        await client.connect();
+        miBaseDeDatos = client.db("Vicio");
+        console.log("conectado a mongo")
+
+    }catch(err){
+        console.error("Error al conectar a Mongo")
+        process.exit(1)
+    }
+    
+}
+
+export const getDb = () : Db => miBaseDeDatos;
