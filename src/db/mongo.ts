@@ -1,5 +1,6 @@
 import {Db, MongoClient} from "mongodb"
 import dotenv from "dotenv"
+import { dbName } from "../utils"
 
 dotenv.config()
 
@@ -13,7 +14,7 @@ export const  connectToMongoDb = async() : Promise<void> =>{
         console.log(urlMongo)
         client = new MongoClient(urlMongo)
         await client.connect();
-        miBaseDeDatos = client.db("Vicio");
+        miBaseDeDatos = client.db(dbName);
         console.log("conectado a mongo")
 
     }catch(err){
